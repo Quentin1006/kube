@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    forceUpdate: "1"
+  name: op
+spec:
+  selector:
+    matchLabels:
+      app: op
+  template:
+    metadata:
+      labels:
+        app: op
+    spec:
+      serviceAccountName: db-operator
+      containers:
+      - image: quentin1006/op-db:latest
+        name: op
