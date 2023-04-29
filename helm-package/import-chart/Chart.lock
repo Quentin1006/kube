@@ -1,0 +1,6 @@
+dependencies:
+- name: basic-chart
+  repository: oci://registry-1.docker.io/quentin1006
+  version: 0.1.0
+digest: sha256:2f6d83ec769d860224204542a332fdc5f76528a813ee7445a8443de66f7de650
+generated: "2023-04-29T10:23:14.043144423+02:00"
