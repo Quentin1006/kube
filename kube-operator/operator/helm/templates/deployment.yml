@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    timestamp: {{ now }}
+    
+  name: op-cmi-deployment
+spec:
+  selector:
+    matchLabels:
+      app: op-cmi
+  template:
+    metadata:
+      labels:
+        app: op-cmi
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - image: {{ .Values.image }}
+          name: {{ .Values.name }}
+          resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+              

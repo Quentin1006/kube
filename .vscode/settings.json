@@ -1,0 +1,5 @@
+{
+    "yaml.schemas": {
+        "https://json.schemastore.org/yamllint.json": "file:///c%3A/Users/quent/repos/KUBE/kube-operator/operator/helm/sa.yml"
+    }
+}
