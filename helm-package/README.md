@@ -1,4 +1,4 @@
-On utilise dockerhub comme registry pour helm
+On utilise dockerhub comme registry pour helm (dans notre cas)
 
 # Helm package
 
