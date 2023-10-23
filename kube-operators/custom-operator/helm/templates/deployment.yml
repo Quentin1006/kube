@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     timestamp: {{ now }}
-    
+    triggered: "1"
   name: op-cmi-deployment
 spec:
   selector:
@@ -16,13 +16,23 @@ spec:
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-        - image: {{ .Values.image }}
+        - image: {{ .Values.image }}:{{ .Values.tag }}
           name: {{ .Values.name }}
+          imagePullPolicy: Always
           resources:
             limits:
-              cpu: 100m
+              cpu: 200m
               memory: 128Mi
             requests:
               cpu: 100m
               memory: 128Mi
-              
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+        - name: debug-container
+          image: busybox
+          command: ["sleep", "infinity"]

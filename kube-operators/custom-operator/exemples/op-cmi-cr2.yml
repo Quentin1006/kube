@@ -1,7 +1,7 @@
 apiVersion: qsahal.org/v1
 kind: ConfigMapIncrementor
 metadata:
-  name: op-cmi-cr
+  name: op-cmi-cr2
 
 spec:
-  sign: '5'
+  sign: '1'

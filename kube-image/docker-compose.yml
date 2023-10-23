@@ -1,0 +1,23 @@
+services:
+  # kube-cluster:
+  #   build: 
+  #     context: ./
+  #   command: tail -f /dev/null
+  #   privileged: true
+
+  # kind:
+  #   image: kindest/node:v1.28.0
+  #   privileged: true
+  
+  kind:
+    build: 
+      context: ./kind
+      dockerfile: Dockerfile
+    privileged: true
+    command: tail -f /dev/null
+
+  # dind:
+  #   image: docker:dind
+  #   privileged: true
+    
+      

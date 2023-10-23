@@ -4,7 +4,7 @@
 
 ```sh
 cd ./service
-docker image build -t quentin1006/op-cmi:0.2.0 service
+docker image build -t quentin1006/op-cmi:0.2.0 .
 docker image push quentin1006/op-cmi:0.2.0
 ```
 

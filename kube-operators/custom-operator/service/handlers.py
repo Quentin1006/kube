@@ -1,27 +1,35 @@
 import kopf
 import kubernetes
-import yaml
-import pprint
+import time
+import random
+import os
 
-pp = pprint.PrettyPrinter(indent=4)
 
 
 @kopf.on.create('qsahal.org', 'v1', 'configmapincrementors')
 def create_fn(body, spec, **kwargs):
-    pp.pprint(body)
+    print("\n-------------------START CREATING-------------------\n")
+    print("VERSION :", os.environ["VERSION"]) 
+    print("sha ;", 1221)
+    print("body =>", body)
+
     name = body['metadata']['name']
     namespace = body['metadata']['namespace']
     sign = spec['sign']
 
-    # Make sure type is provided
-    if not sign:
-        raise kopf.TemporaryError(f"Type must be set. Got {sign}.")
+    rand_int = random.randint(1, 10)
+
+
+    if rand_int < int(sign):
+        message = f"sign {sign} is above generated rand {rand_int}"
+        print(message)
+        raise kopf.PermanentError(message)
 
     cm = kubernetes.client.V1ConfigMap(
         kind="ConfigMap",
         api_version="v1",
         metadata=kubernetes.client.V1ObjectMeta(name=name),
-        data={"count": sign},
+        data={"count": sign, "date": f"${int(time.time())}"},
     )
 
     # Object used to communicate with the API Server
@@ -29,28 +37,30 @@ def create_fn(body, spec, **kwargs):
 
     api.create_namespaced_config_map(namespace=namespace, body=cm)
 
-    # Make the Pod and Service the children of the Database object
-    kopf.adopt(cm, owner=body)
-
     # Update status
     msg = f"ConfigMap  `{name}` created"
+    print("\n-------------------END CREATING-------------------\n")
     return {'message': msg}
 
 
 @kopf.on.update('qsahal.org', 'v1', 'configmapincrementors')
 def update_fn(spec, old, new, diff, **_):
+    print("\n-------------------START UPDATING-------------------\n")
     print("---diff---")
-    print(diff)
-    pp.pprint(spec)
-    pp.pprint(old)
-    pp.pprint(new)
-    pp.pprint(diff)
+    print("diff =>", diff)
+    print("spec =>", spec)
+    print("old =>", old)
+    print("new =>", new)
+    print("\n-------------------END UPDATING-------------------\n")
 
-    return "ok"
+    raise kopf.TemporaryError("Error updating.", delay=60)
 
 
 @kopf.on.delete('qsahal.org', 'v1', 'configmapincrementors')
 def delete(body, **kwargs):
+
+    api = kubernetes.client.CoreV1Api()
+    api.create_namespaced_config_map(namespace=namespace, body=cm)
     msg = f"Delete {body['metadata']['name']}"
     return {'message': msg}
 
@@ -58,4 +68,7 @@ def delete(body, **kwargs):
 # Run when controller is restarted
 @kopf.on.resume('qsahal.org', 'v1', 'configmapincrementors')
 def resume_fn(body, **kwargs):
+    print("\n\n-------------------START RESUMING-------------------\n\n")
+    print("body =>", body)
+    print("\n-------------------END RESUMING-------------------\n")
     return {'message': "Controller resumed all configmaps"}
