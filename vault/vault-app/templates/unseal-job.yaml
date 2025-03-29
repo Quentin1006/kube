@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-unsealed
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      serviceAccountName: pod-executor-sa
+      containers:
+        - name: vault-unseal
+          image: localhost:5001/toolbox
+          env:
+            - name: VAULT_POD_NAME
+              value: vault-service-0
+            - name: MY_SCRIPT
+              valueFrom:
+                configMapKeyRef:
+                  name: vault-unseal-script
+                  key: unseal.sh
+          command: ["/bin/sh"]
+          args: ["-c", "$(MY_SCRIPT)"]
+          volumeMounts:
+            - name: vault-unseal-script
+              mountPath: /scripts
+      volumes:
+        - name: vault-unseal-script
+          configMap:
+            name: vault-unseal-script
+            defaultMode: 0777
+      restartPolicy: OnFailure

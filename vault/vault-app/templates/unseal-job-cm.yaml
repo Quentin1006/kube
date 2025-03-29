@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vault-unseal-script
+data:
+  unseal.sh: |
+    #!/bin/sh
+    set -e
+    sleep 10
+    kubectl exec $VAULT_POD_NAME -- vault operator init -key-shares=1 -key-threshold=1 -format=json > cluster-keys.json
+    VAULT_UNSEAL_KEY=$(jq -r ".unseal_keys_b64[]" cluster-keys.json)
+    kubectl exec $VAULT_POD_NAME -- vault operator unseal $VAULT_UNSEAL_KEY
+    cat cluster-keys.json

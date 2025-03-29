@@ -1,0 +1,61 @@
+minio:
+  mode: standalone
+  auth:
+    rootUser: minio
+    rootPassword: password
+  # statefulset:
+  #   replicaCount: 1
+  #   drivesPerNode: 1
+
+  provisioning:
+    enabled: true
+    policies:
+      - name: "readonly-policy"
+        statements:
+          - effect: "Allow"
+            actions:
+              - "s3:GetObject"
+              - "s3:ListBucket"
+            resources:
+              - "arn:aws:s3:::bucket1"
+              - "arn:aws:s3:::bucket1/*"
+    users:
+      - username: "readonly-user"
+        password: "password"
+        policies:
+          - "readonly-policy"
+    extraCommands:
+      - mc ls provisioning/bucket1 || mc mb provisioning/bucket1
+
+  
+  persistence:
+    enabled: true
+    storageClass: hostpath
+    size: 10Gi
+  
+  # ingress:
+  #   enabled: true
+  #   ingressClassName: nginx
+  #   hostname: localhost
+  #   path: /console
+  #   pathType: Prefix
+  #   annotations:
+  #     nginx.ingress.kubernetes.io/rewrite-target: /
+
+
+  metrics:
+    enabled: true
+    serviceMonitor: 
+      enabled: true
+      sleepTime: 30s
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/path: "/minio/v2/metrics/cluster"
+      prometheus.io/port: "9000"
+
+backup:
+  enabled: true
+  schedule: "*/5 * * * *" # Runs every 10 minutes
+  storageClass: hostpath
+  size: 5Gi
+

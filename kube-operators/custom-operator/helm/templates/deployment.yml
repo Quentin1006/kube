@@ -1,10 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    timestamp: {{ now }}
-    triggered: "1"
   name: op-cmi-deployment
+  labels:
+        date: "{{ now | unixEpoch }}"
 spec:
   selector:
     matchLabels:
@@ -16,7 +15,7 @@ spec:
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
       containers:
-        - image: {{ .Values.image }}:{{ .Values.tag }}
+        - image: "{{ .Values.image }}:{{ .Values.tag }}"
           name: {{ .Values.name }}
           imagePullPolicy: Always
           resources:

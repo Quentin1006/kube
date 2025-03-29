@@ -4,8 +4,12 @@ bap:
 	docker image push quentin1006/op-cmi:${TAG}
 
 # helm upgrade
-hu:
-	helm upgrade -i --set tag=${TAG} custop helm
+hup: hun
+	helm upgrade -i custop helm
+
+hun:
+	helm uninstall custop
+
 
 # clear cluster from CR cmi and config map
 cc:
@@ -24,5 +28,5 @@ acr2: cc
 test:
 	@echo ${TAG}
 
-all: bap cc hu
+all: bap cc huzzzzzzzzzzzzzzz
 
