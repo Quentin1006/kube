@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.adminer.name }}
+  labels:
+    app: {{ .Values.adminer.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.adminer.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.adminer.name }}
+    spec:
+      containers:
+        - name: {{ .Values.adminer.name }}
+          image: "adminer:4.8.1"
+          ports:
+            - containerPort: {{ .Values.adminer.ports.containerPort }}
+          resources:
+            limits:
+              cpu: {{ .Values.adminer.resources.limits.cpu }}
+              memory: {{ .Values.adminer.resources.limits.memory }}
+            requests:
+              cpu: {{ .Values.adminer.resources.requests.cpu }}
+              memory: {{ .Values.adminer.resources.requests.memory }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.adminer.name }}
+spec:
+  selector:
+    app: {{ .Values.adminer.name }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.adminer.ports.exposedPort }}
+      targetPort: {{ .Values.adminer.ports.containerPort }}
+  type: ClusterIP

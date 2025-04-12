@@ -1,0 +1,53 @@
+postgresql:
+  auth:
+    username: "qsahal"
+    postgresPassword: "postgresql"
+    password: "postgresql"
+    enablePostgresUser: true
+    usePasswordFiles: false
+  
+  primary:
+    initdb:
+      scriptsConfigMap: "initdb-scripts-cm"
+        
+  # passwordUpdateJob:
+  #   enabled: true
+  
+  backup:
+    enabled: true
+    cronjob:
+      schedule: "0 1 * * *"
+      storage:
+        resourcePolicy: "keep"
+      command:
+        - "/bin/bash"
+        - "-c"
+        - |
+          export ORIGINAL_FILE="${PGDUMP_DIR}/pg_dumpall-$(date '+%Y-%d').pgdump";
+          echo ORIGINAL_FILE=$ORIGINAL_FILE;
+          pg_dumpall --clean --if-exists --load-via-partition-root --quote-all-identifiers --no-password --file=${ORIGINAL_FILE};
+          echo "pg_dumped, date=$(date '+%d')";
+          [ "$(date '+%d')" -eq 01 ] && cp $ORIGINAL_FILE ${PGDUMP_DIR}/pg_dumpall-$(date '+%Y-%m').pgdump;
+          echo "now sleeping";
+          sleep 300;
+  metrics:
+    enabled: true
+
+adminer:
+  name: adminer
+  enabled: true
+  ports:
+    containerPort: 8080
+    exposedPort: 80
+  resources:
+    limits:
+      cpu: "200m"
+      memory: "256Mi"
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+  ingress:
+    host: adminer.local
+  
+
+

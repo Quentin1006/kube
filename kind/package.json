@@ -1,0 +1,11 @@
+{
+  "name": "kind",
+  "version": "1.0.0",
+  "scripts": {
+    "cluster:create": "kind create cluster",
+    "cluster:use": "kubectl cluster-info --context kind-kind"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

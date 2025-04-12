@@ -1,0 +1,19 @@
+{
+  "name": "postgresql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "namespace": "postgresql",
+    "release": "postgresql",
+    "path": "./"
+  },
+  "scripts": {
+    "chart:install": "helm upgrade -i ${npm_package_config_release} ${npm_package_config_path} -n ${npm_package_config_namespace} --create-namespace",
+    "chart:uninstall": "helm uninstall ${npm_package_config_release} -n ${npm_package_config_namespace} --wait",
+    "debug": "kubectl apply -f ./debug-pod.yaml -n ${npm_package_config_namespace}"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

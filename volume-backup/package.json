@@ -1,0 +1,21 @@
+{
+  "name": "longhorn",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "namespace": "volume-backup",
+    "release": "app",
+    "path": "./app"
+  },
+  "scripts": {
+    "longhorn:install": "helm upgrade -i longhorn ./longhorn -n longhorn-system --create-namespace",
+    "longhorn:uninstall": "helm uninstall longhorn -n longhorn-system --wait",
+    "app:install": "helm upgrade -i ${npm_package_config_release} ${npm_package_config_path} -n ${npm_package_config_namespace} --create-namespace",
+    "app:uninstall": "helm uninstall ${npm_package_config_release} -n ${npm_package_config_namespace} --wait",
+    "debug": "kubectl apply -f ./debug-pod.yaml -n ${npm_package_config_namespace}"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
