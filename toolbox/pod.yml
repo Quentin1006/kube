@@ -1,9 +1,7 @@
-# https://kubernetes.io/docs/concepts/workloads/pods/
 apiVersion: v1
 kind: Pod
 metadata:
   name: "toolbox"
-  namespace: default
   labels:
     app: "toolbox"
 spec:
@@ -23,3 +21,7 @@ spec:
     - containerPort: 80
       name: http
   restartPolicy: Always
+
+# docker build -t localhost:5001/toolbox .
+# docker push localhost:5001/toolbox
+# docker run -d -p 5001:5000 --restart always --name registry registry:2

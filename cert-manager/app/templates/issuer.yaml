@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: pebble-issuer
+spec:
+  acme:
+    server: https://public.ca-server.com:32443/dir
+    skipTLSVerify: true
+    privateKeySecretRef:
+      name: pebble-account-key
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
