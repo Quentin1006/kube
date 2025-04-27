@@ -38,3 +38,55 @@ Le gestionnaire de certificats (Cert Manager) est un module complémentaire pour
 
 - Dans Kind, même si un service est exposé via NodePort, il ne sera accessible que depuis le "localhost" du conteneur Docker dans lequel il se trouve.
 - Pour le défi ACME HTTP-01, l'issuer doit être configuré avec une URL publique externe.
+
+- On peut ajouter des entrées dns du dns privé du cluster en modifiant le configmap (existe t-il une solution moins invasive ?)
+
+- En ajoutant l'option `fallthrough` dans la config dns du cluster on permet de pas bloquer le traffic sur une certaine addresse ip si le nom de domaine ne matche pas
+
+```yaml
+data:
+  Corefile: |
+    .:53 {
+        ...
+        hosts {
+          10.244.0.1 public.ca-server.com
+          fallthrough
+        }
+        ...
+      }
+```
+
+Pour redémarrer coredns: 
+```sh
+kubectl rollout restart deployment coredns -n kube-system
+```
+
+- Le fichier resolv.conf configure la résolution DNS sur un système. Il spécifie les serveurs DNS, le parametre `ndots` permet d'indiquer au client dns de tenter de résoudre le domaine en compeltant avec tous les suffixes du parametre search si le nombre de "." dans le domaine à résoudre contient moins de points que la valeur de ndots
+ex : 
+search: svc.cluster
+ndots: 3 
+domaine à résoudre: hello.fr
+
+Le dns tentera de résoudre hello.fr.svc.cluster
+
+En revanche si ndots: 0
+
+Le dns essayera uniquement de résoudre hello.fr
+
+- Pour chaque nouveau pod créé, le plugin Network créera un `veth` sur le host du node
+En lancant la commande `tcpdump -i <veth-id> -nn` sur le host on peut suivre tous les appels réseaux effectués depuis le pod
+
+- En executant `ip netns exec <cni-id> ip addr` on peut récupérer l'ip du pod qui est associé à la cni
+
+- Pour voir la table de routage on peut executer la commande ip route
+
+- Décrypter un certificat : `openssl x509 -in certname.crt -text -noout`
+
+- Ajouter un certificat sur la machine 
+  ```sh
+   # When decrypting the certificate, it needs to have the property CA:TRUE
+   # there are multiple dest on linux depending on the distribution
+   cp <certname>.crt /usr/local/share/ca-certificates
+   update-ca-certificates
+  ```
+
