@@ -1,0 +1,15 @@
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: daily-backup
+  namespace: velero # important to keep this namespace as velero, otherwise the schedule will not work
+spec:
+  schedule: "0/5 * * * *" # Every day at midnight
+  template:
+    ttl: 1h0m0s
+    # includedResources:
+    #   - volumesnapshot
+    includedNamespaces:
+      - default
+    snapshotVolumes: true
+    storageLocation: default

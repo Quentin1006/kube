@@ -1,0 +1,8 @@
+prometheus:
+  server:
+    ingress:
+      enabled: true
+      ingressClassName: nginx
+      hostname: localhost
+      path: /prometheus
+      pathType: Prefix

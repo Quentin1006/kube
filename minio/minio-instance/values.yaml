@@ -1,11 +1,14 @@
 minio:
-  mode: standalone
+  mode: distributed
   auth:
     rootUser: minio
     rootPassword: password
-  # statefulset:
-  #   replicaCount: 1
-  #   drivesPerNode: 1
+  statefulset:
+    replicaCount: 2
+    drivesPerNode: 2
+  extraEnvVars:
+    - name: MINIO_LOG_LEVEL
+      value: "DEBUG"
 
   provisioning:
     enabled: true
@@ -27,21 +30,20 @@ minio:
     extraCommands:
       - mc ls provisioning/bucket1 || mc mb provisioning/bucket1
 
-  
   persistence:
     enabled: true
-    storageClass: hostpath
+    storageClass: standard
     size: 10Gi
   
-  # ingress:
-  #   enabled: true
-  #   ingressClassName: nginx
-  #   hostname: localhost
-  #   path: /console
-  #   pathType: Prefix
-  #   annotations:
-  #     nginx.ingress.kubernetes.io/rewrite-target: /
-
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: localhost
+    # path: /minio(/.*)?
+    # pathType: ImplementationSpecific
+    # annotations:
+    #   nginx.ingress.kubernetes.io/use-regex: "true"
+    #   nginx.ingress.kubernetes.io/rewrite-target: /$1
 
   metrics:
     enabled: true
@@ -53,9 +55,22 @@ minio:
       prometheus.io/path: "/minio/v2/metrics/cluster"
       prometheus.io/port: "9000"
 
-backup:
+veleroBackup:
   enabled: true
-  schedule: "*/5 * * * *" # Runs every 10 minutes
-  storageClass: hostpath
+  schedule: "*/5 * * * *" # Runs every 5 minutes
+  storageClass: standard
+
+
+backup:
+  enabled: false # Use velero instead
+  schedule: "*/5 * * * *" # Runs every 5 minutes
+  storageClass: standard
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 2
   size: 5Gi
+  restartPolicy: Never
+  extraCommands:
+    - mc alias set local http://localhost:9000 minio password
+    - mc ls local/backup || mc mb local/backup
+
 

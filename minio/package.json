@@ -9,9 +9,10 @@
     "path": "./minio-instance"
   },
   "scripts": {
-    "s3:install": "helm upgrade -i ${npm_package_config_release} ${npm_package_config_path} -n ${npm_package_config_namespace} --create-namespace",
-    "s3:uninstall": "helm uninstall ${npm_package_config_release} -n ${npm_package_config_namespace}",
-    "debug": "kubectl apply -f ./debug-pod.yaml -n ${npm_package_config_namespace}"
+    "setup": "helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update",
+    "s3:install": "helm upgrade -i minio ./minio-instance -n minio --create-namespace",
+    "s3:uninstall": "helm uninstall minio -n minio --wait",
+    "debug": "kubectl apply -f ./debug-pod.yaml -n minio"
   },
   "keywords": [],
   "author": "",

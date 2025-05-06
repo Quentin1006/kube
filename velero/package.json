@@ -1,0 +1,16 @@
+{
+  "name": "velero",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "setup": "npm run minio:setup && npm run velero:setup",
+    "minio:setup": "helm repo add bitnami https://charts.bitnami.com/bitnami && helm repo update",
+    "velero:setup": "helm repo add vmware-tanzu https://vmware-tanzu.github.io/helm-charts && helm repo update",
+    "velero:install": "helm upgrade -i velero ./ -n velero --create-namespace --set-file credentials.secretContents.cloud=./credentials-velero",
+    "velero:uninstall": "helm uninstall velero -n velero --wait"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

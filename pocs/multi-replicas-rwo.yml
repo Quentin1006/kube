@@ -1,0 +1,51 @@
+# Summary
+
+# En ReadWriteOnce, un seul pod peut monter le volume en écriture à la fois,
+# En local il est possible de monter plusieurs replicas qui pointent sur un meme pod si les 2 pods sont montés sur le même noeud
+# Mais dans ce cas, il y a un risque de corruption de données si les 2 pods écrivent en même temps sur le même volume
+# Pour pouvoir écrire sur le même volume depuis plusieurs pods, il faut utiliser ReadWriteMany (sur un NFS par exemple)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multi-replicas-deployment
+  labels:
+    app: multi-replicas-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: multi-replicas-app
+  template:
+    metadata:
+      labels:
+        app: multi-replicas-app
+    spec:
+      containers:
+      - name: app-container
+        image: nginx:latest
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        volumeMounts:
+        - name: app-storage
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: app-storage
+        persistentVolumeClaim:
+          claimName: app-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-pvc
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Mi

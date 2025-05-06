@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "setup": "npm run repo:add && npm run dependency:update",
+    "repo:add": "helm repo add prometheus-community https://prometheus-community.github.io/helm-charts",
+    "dependency:update": "helm dependency update",
+    "ctrl:install": "helm upgrade -i prometheus . -n prometheus --create-namespace",
+    "ctrl:uninstall": "helm uninstall prometheus -n prometheus --wait",
+    "pf": "kubectl port-forward svc/prometheus-kube-prometheus-prometheus 9090:9090 -n prometheus > /dev/null 2>&1 &"
+  }
+}

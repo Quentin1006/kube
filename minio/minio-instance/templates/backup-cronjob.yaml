@@ -5,6 +5,9 @@ metadata:
   name: backup-cronjob
 spec:
   schedule: "{{ .Values.backup.schedule }}"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: {{ .Values.backup.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.backup.failedJobsHistoryLimit }}
   jobTemplate:
     spec:
       template:
@@ -33,11 +36,11 @@ spec:
                   readOnly: true
                 - name: backup-volume
                   mountPath: /data/backup
-          restartPolicy: OnFailure
+          restartPolicy: {{ .Values.backup.restartPolicy }}
           volumes:
             - name: minio-volume
               persistentVolumeClaim:
-                claimName: minio
+                claimName: data-0-minio-0
             - name: backup-volume
               persistentVolumeClaim:
                 claimName: backup-pvc

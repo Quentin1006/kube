@@ -1,17 +1,12 @@
 {
   "name": "ingress-controller",
   "version": "1.0.0",
-  "config": {
-    "namespace": "ingress-controller",
-    "release": "ingress-controller",
-    "path": "."
-  },
   "scripts": {
-    "setup": "npm run repo:add && npm run dependenncy:update",
+    "setup": "npm run repo:add && npm run dependency:update",
     "repo:add": "helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx",
-    "dependenncy:update": "helm dependency update",
-    "ctrl:install": "helm upgrade -i ${npm_package_config_release} ${npm_package_config_path} -n ${npm_package_config_namespace} --create-namespace",
-    "ctrl:uninstall": "helm uninstall ${npm_package_config_release} -n ${npm_package_config_namespace}"
+    "dependency:update": "helm dependency update",
+    "ctrl:install": "helm upgrade -i ingress-controller . -n ingress-nginx --create-namespace",
+    "ctrl:uninstall": "helm uninstall ingress-controller -n ingress-nginx --wait"
   },
   "keywords": [],
   "author": "",

@@ -49,6 +49,7 @@ data:
     .:53 {
         ...
         hosts {
+          # run ip route from a pod to get the ip
           10.244.0.1 public.ca-server.com
           fallthrough
         }
