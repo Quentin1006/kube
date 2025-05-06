@@ -1,0 +1,10 @@
+ingcontroller:
+  controller:
+    # For local testing, we can use hostPort to expose the service on the host network.
+    # to allow access without the LoadBalancer IP
+    hostPort:
+      enabled: true
+#     service:
+#       nodePorts:
+#         http: 31600
+#         https: 31601

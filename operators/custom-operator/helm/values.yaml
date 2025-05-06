@@ -1,0 +1,8 @@
+namespace: default
+name: op-cmi
+image: quentin1006/op-cmi
+tag: latest
+
+serviceAccount:
+  name: op-cmi-sa
+  

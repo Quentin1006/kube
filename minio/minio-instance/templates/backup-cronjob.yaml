@@ -1,0 +1,72 @@
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: backup-cronjob
+spec:
+  schedule: "{{ .Values.backup.schedule }}"
+  concurrencyPolicy: Replace
+  successfulJobsHistoryLimit: {{ .Values.backup.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.backup.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: backup
+              image: minio/mc:RELEASE.2025-03-12T17-29-24Z
+              env:
+              - name: MINIO_ACCESS_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: backup-secret
+                    key: accesskey
+              - name: MINIO_SECRET_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: backup-secret
+                    key: secretkey
+              command:
+                - /bin/sh
+                - -c
+                - mc alias set source http://minio:9000 $MINIO_ACCESS_KEY $MINIO_SECRET_KEY && mc mirror /data/minio /data/backup
+              volumeMounts:
+                - name: minio-volume
+                  mountPath: /data/minio
+                  readOnly: true
+                - name: backup-volume
+                  mountPath: /data/backup
+          restartPolicy: {{ .Values.backup.restartPolicy }}
+          volumes:
+            - name: minio-volume
+              persistentVolumeClaim:
+                claimName: data-0-minio-0
+            - name: backup-volume
+              persistentVolumeClaim:
+                claimName: backup-pvc
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: backup-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.backup.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.size }}
+
+---
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: backup-secret
+type: Opaque
+data:
+  accesskey: {{ .Values.minio.auth.rootUser | b64enc | quote }}
+  secretkey: {{ .Values.minio.auth.rootPassword | b64enc | quote }}
+{{- end }}

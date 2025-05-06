@@ -1,0 +1,23 @@
+{
+  "name": "cert-manager",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "npm run setup:pebble-ca && npm run setup:manager",
+    "setup:pebble-ca": "npm run pebble-ca:repo:add && npm run pebble-ca:deps",
+    "setup:manager": "npm run cert-manager:repo:add && npm cert-manager:deps",
+    "manager:repo:add": "helm repo add jetstack https://charts.jetstack.io",
+    "manager:deps": "helm dependency update ./cert-manager",
+    "manager:install": "helm upgrade -i cert-manager ./cert-manager -n cert-manager --create-namespace",
+    "manager:uninstall": "helm uninstall cert-manager -n cert-manager --wait",
+    "pebble-ca:repo:add": "helm repo add jupyterhub https://jupyterhub.github.io/helm-chart",
+    "pebble-ca:deps": "helm dependency update ./pebble-ca",
+    "pebble-ca:install": "helm upgrade -i pebble-ca ./pebble-ca -n cert-manager --create-namespace",
+    "pebble-ca:uninstall": "helm uninstall pebble-ca -n cert-manager --wait",
+    "app:install": "helm upgrade -i app ./app -n cert-manager --create-namespace",
+    "app:uninstall": "helm uninstall app -n cert-manager --wait",
+    "debug": "kubectl apply -f ../debug-pod.yaml -n cert-manager"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

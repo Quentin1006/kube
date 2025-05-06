@@ -1,0 +1,45 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mariadb-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: hostpath
+  resources:
+    requests:
+      storage: 3Gi
+
+---
+
+# https://kubernetes.io/docs/concepts/workloads/pods/
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "myapp2"
+  namespace: default
+  labels:
+    app: "myapp2"
+spec:
+  containers:
+  - name: myapp2
+    image: nginx
+    resources:
+      limits:
+        cpu: 200m
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 200Mi
+    ports:
+    - containerPort: 80
+      name: http
+    volumeMounts:
+    - name: db
+      mountPath: /etc/db
+  volumes:
+    - name: db
+      persistentVolumeClaim:
+        claimName: mariadb-pvc
+  restartPolicy: Always
+---

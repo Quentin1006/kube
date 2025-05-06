@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: op-cmi-deployment
+  labels:
+        date: "{{ now | unixEpoch }}"
+spec:
+  selector:
+    matchLabels:
+      app: op-cmi
+  template:
+    metadata:
+      labels:
+        app: op-cmi
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      containers:
+        - image: "{{ .Values.image }}:{{ .Values.tag }}"
+          name: {{ .Values.name }}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          env:
+            - name: PYTHONUNBUFFERED
+              value: "1"
+            - name: VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+        - name: debug-container
+          image: busybox
+          command: ["sleep", "infinity"]

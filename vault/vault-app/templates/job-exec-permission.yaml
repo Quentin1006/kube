@@ -1,0 +1,28 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-executor
+rules:
+  - apiGroups: [""]
+    resources: ["pods", "pods/exec"]
+    verbs: ["get", "list", "create", "delete", "patch", "update", "watch"]
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-executor-sa
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-executor-binding
+  namespace: "{{ .Release.Namespace }}"
+subjects:
+  - kind: ServiceAccount
+    name: pod-executor-sa
+    namespace: "{{ .Release.Namespace }}"
+roleRef:
+  kind: Role
+  name: pod-executor
+  apiGroup: rbac.authorization.k8s.io

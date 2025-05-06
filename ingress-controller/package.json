@@ -1,0 +1,14 @@
+{
+  "name": "ingress-controller",
+  "version": "1.0.0",
+  "scripts": {
+    "setup": "npm run repo:add && npm run dependency:update",
+    "repo:add": "helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx",
+    "dependency:update": "helm dependency update",
+    "ctrl:install": "helm upgrade -i ingress-controller . -n ingress-nginx --create-namespace",
+    "ctrl:uninstall": "helm uninstall ingress-controller -n ingress-nginx --wait"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

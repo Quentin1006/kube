@@ -1,0 +1,17 @@
+{
+  "name": "hostpath",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "config": {
+    "namespace": "volume-backup",
+    "release": "app",
+    "path": "./app"
+  },
+  "scripts": {
+    "hostpath:deploy": "kubectl apply -k https://github.com/kubernetes-csi/csi-driver-host-path/deploy/kubernetes/snapshotter"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

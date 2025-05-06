@@ -1,0 +1,1 @@
+🚫 WSL2 can't load iscsi_tcp, so Longhorn won't work reliably.

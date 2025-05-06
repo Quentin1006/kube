@@ -1,0 +1,9 @@
+dependencies:
+- name: velero
+  repository: https://vmware-tanzu.github.io/helm-charts
+  version: 9.0.4
+- name: minio
+  repository: https://charts.bitnami.com/bitnami
+  version: 15.0.3
+digest: sha256:0cee0966976d7d42a7633ee768c7d1f17de0b6fbf4de72cf9f27ac8f452db053
+generated: "2025-05-04T12:05:47.286261035+02:00"

@@ -1,0 +1,45 @@
+minio:
+  mode: standalone
+  auth:
+    rootUser: minio
+    rootPassword: password
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 10Gi
+  apiIngress:
+    enabled: true
+    ingressClassName: nginx
+    hostname: backup-storage.local
+  # ingress:
+  #   enabled: true
+  #   ingressClassName: nginx
+  #   hostname: backup-storage.local
+  provisioning:
+    enabled: true
+    extraCommands:
+      - mc ls provisioning/velero || mc mb provisioning/velero
+
+velero:
+  snapshotsEnabled: true
+  configuration:
+    backupStorageLocation:
+      - name: default
+        provider: aws
+        bucket: velero
+        config:
+          region: minio
+          s3ForcePathStyle: true
+          publicUrl: http://backup-storage.local
+          s3Url: http://backup-storage.local
+          # s3Url: http://velero-minio.velero:9000
+          # insecureSkipTLSVerify: "true"
+    volumeSnapshotLocation:
+      - name: hostpath-snapshots  # Name for the snapshot location (you can customize this)
+        provider: hostpath 
+  initContainers:
+    - name: velero-plugin-for-aws
+      image: velero/velero-plugin-for-aws:v1.12.0
+      volumeMounts:
+        - mountPath: /target
+          name: plugins

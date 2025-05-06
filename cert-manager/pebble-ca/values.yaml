@@ -1,0 +1,7 @@
+pebble:
+  coredns:
+    corefileSegment: |
+      hosts {
+        127.0.0.1 app.local
+        fallthrough
+      }

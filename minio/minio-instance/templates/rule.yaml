@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: minio-requests-alert
+spec:
+  groups:
+  - name: minio.rules
+    rules:
+    - alert: MinIOTotalRequestsHigh
+      expr: increase(minio_s3_requests_total[5m]) > 10
+      for: 10s
+      labels:
+        severity: warning
+      annotations:
+        summary: "MinIO a reçu plus de 100 requêtes en 5 minutes"
+        description: "Le total des requêtes MinIO a dépassé 100 sur les 5 dernières minutes."

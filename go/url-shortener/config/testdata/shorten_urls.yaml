@@ -1,0 +1,6 @@
+shorten_urls:
+  uqza: "https://www.google.com/search?q=example"
+  uqzb: "https://www.github.com/abcd1234"
+  uqzc: "https://stackoverflow.com/questions/12345678"
+  uqzd: "https://www.reddit.com/r/programming/comments/xyz123"
+  uqze: "https://www.twitter.com/status/987654321"
