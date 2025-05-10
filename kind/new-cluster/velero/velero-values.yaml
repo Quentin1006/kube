@@ -1,4 +1,4 @@
-snapshotsEnabled: true
+snapshotsEnabled: true  # NodeAgent is supposed to handle the work
 configuration:
   backupStorageLocation:
     - name: default
@@ -12,8 +12,8 @@ configuration:
         # s3Url: http://velero-minio.velero:9000
         # insecureSkipTLSVerify: "true"
   volumeSnapshotLocation:
-    - name: hostpath-snapshots  # Name for the snapshot location (you can customize this)
-      provider: hostpath 
+    - name: longhorn-snapshots  # Name for the snapshot location (you can customize this)
+      provider: longhorn 
 initContainers:
   - name: velero-plugin-for-aws
     image: velero/velero-plugin-for-aws:v1.12.0

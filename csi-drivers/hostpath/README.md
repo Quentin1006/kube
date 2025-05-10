@@ -8,3 +8,5 @@ Le fichier app permet de tester que le hostpath fonctionne bien ainsi que la cr�
 Le fichier restore-pvc permet de créer un nouveau pvc avec comme source le snapshot du premùier pvc
 
 Le snapshot standard de kubernetes est une copie à un moment précis du volume, pas de synchro pas de récurrence
+
+🚫 hostpath n'est pas compatible avec velero si nous voulons copier le contenu des volumes

@@ -7,5 +7,5 @@ nodes:
     hostPort: 8080
     protocol: TCP
   - containerPort: 443
-    hostPort: 8443
+    hostPort: 44380
     protocol: TCP

@@ -1,0 +1,1 @@
+This folder just contains the necessary scripts to pop a "fully functionnal" cluster 

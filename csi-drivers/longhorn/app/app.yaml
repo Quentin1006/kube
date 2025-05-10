@@ -1,11 +1,11 @@
-# Basic app that uses a hostPath volume, a volume snpashot can be taken from it
+# Basic app that uses a longhorn volume, a volume snpashot can be taken from it
 # and then we can test the export with velero to another cluster
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: hostpath-pvc
+  name: longhorn-pvc
 spec:
-  storageClassName: hostpath
+  storageClassName: longhorn
   accessModes:
   - ReadWriteOnce
   resources:
@@ -16,21 +16,21 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hostpath-deployment
+  name: longhorn-deployment
   labels:
-    app: hostpath
+    app: longhorn
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hostpath
+      app: longhorn
   template:
     metadata:
       labels:
-        app: hostpath
+        app: longhorn
     spec:
       containers:
-      - name: hostpath-container
+      - name: longhorn-container
         image: nginx:latest
         resources:
           requests:
@@ -40,22 +40,22 @@ spec:
             memory: "128Mi"
             cpu: "500m"
         volumeMounts:
-        - name: hostpath-volume
+        - name: longhorn-volume
           mountPath: /usr/share/nginx/html
       volumes:
-      - name: hostpath-volume
+      - name: longhorn-volume
         persistentVolumeClaim:
-          claimName: hostpath-pvc
+          claimName: longhorn-pvc
 
 ---
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: hostpath-service
+  name: longhorn-service
 spec:
   selector:
-    app: hostpath
+    app: longhorn
   ports:
     - protocol: TCP
       port: 80

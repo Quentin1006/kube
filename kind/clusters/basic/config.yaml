@@ -5,8 +5,8 @@ nodes:
   # necessary to map the host port to the kindest container port
   extraPortMappings:
   - containerPort: 80
-    hostPort: 80
+    hostPort: 8090
     protocol: TCP
   - containerPort: 443
-    hostPort: 443
+    hostPort: 44390
     protocol: TCP

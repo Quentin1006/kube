@@ -2,8 +2,8 @@
 apiVersion: snapshot.storage.k8s.io/v1
 kind: VolumeSnapshot
 metadata:
-  name: my-snapshot
+  name: longhorn-pvc-snapshot
 spec:
-  volumeSnapshotClassName: csi-hostpath-snapclass
+  volumeSnapshotClassName: longhorn-snapshot-class
   source:
-    persistentVolumeClaimName: hostpath-pvc
+    persistentVolumeClaimName: longhorn-pvc
