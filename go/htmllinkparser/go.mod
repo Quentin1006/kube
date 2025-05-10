@@ -1,4 +1,4 @@
-module github.com/quentin1006/kube/go/htmllinkparser
+module github.com/Quentin1006/kube/go/htmllinkparser
 
 go 1.24.2
 
